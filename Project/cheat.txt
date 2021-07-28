@@ -1,0 +1,6 @@
+sudo docker-compose build
+sudo docker-compose up --scale baba=3
+
+{<min, inputs/inp.txt, outputs/out.txt>, <max, inputs/inp.txt, outputs/out2.txt>, <wordcount, inputs/alicepg11.txt, outputs/out3.txt>}
+
+{<min, inputs/inp.txt, outputs/out.txt>, <sas, inputs/inp.txt, outputs/out4.txt>}
