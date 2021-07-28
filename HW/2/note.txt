@@ -1,0 +1,83 @@
+    1  ip addr
+
+    2  sudo rm -f /etc/machine-id 
+    3  sudo dbus-uuidgen --ensure=/etc/machine-id
+    4  sudo rm /var/lib/dbus/machine-id 
+    5  sudo dbus-uuidgen --ensure
+    6  reboot 
+    
+    7  sudo nano /etc/hosts
+    
+    8  ssh-keygen -b 4096
+    9  cat /home/hadoop/.ssh/id_rsa.pub
+    54  cat .ssh/id_rsa.pub >> .ssh/authorized_keys
+   
+   
+   11  wget http://apache.cs.utah.edu/hadoop/common/current/hadoop-3.1.2.tar.gz
+   14  tar -xzf hadoop-3.2.1.tar.gz
+   15  mv hadoop-3.2.1 hadoop
+   
+   17  nano .profile
+   18  nano .bashrc 
+   
+   21  sudo apt install openjdk-8-jdk
+   
+   30  nano ~/hadoop/etc/hadoop/hadoop-env.sh
+   31  nano ~/hadoop/etc/hadoop/core-site.xml
+   32  nano ~/hadoop/etc/hadoop/hdfs-site.xml
+   33  nano ~/hadoop/etc/hadoop/mapred-site.xml
+   34  ~/hadoop/etc/hadoop/yarn-site.xml
+   35  nano ~/hadoop/etc/hadoop/yarn-site.xml
+   36  nano ~/hadoop/etc/hadoop/workers
+   37  nano ~/hadoop/etc/hadoop/yarn-site.xml
+   38  nano ~/hadoop/etc/hadoop/mapred-site.xml
+   
+   39  cd /home/hadoop/
+   40  scp hadoop-*.tar.gz vm2:/home/hadoop
+   41  scp hadoop-*.tar.gz vm3:/home/hadoop
+   42  ssh vm2
+   43  ssh vm3
+   44  scp ~/hadoop/etc/hadoop/* vm2:/home/hadoop/hadoop/etc/hadoop/
+   45  scp ~/hadoop/etc/hadoop/* vm3:/home/hadoop/hadoop/etc/hadoop/
+   
+   46  hdfs namenode -format
+   47  source .bashrc 
+   48  source .profile 
+   
+   50  start-dfs.sh
+   76  start-yarn.sh 
+   51  jps
+   72  hdfs dfsadmin -report
+
+   58  stop-dfs.sh
+
+   79  hdfs dfs -mkdir -p /user/hadoop
+   80  nano test.txt
+   82  hdfs dfs -put test.txt /user/hadoop
+   83  hdfs dfs -ls /user/hadoop
+
+   89  nano .bashrc 
+   91  echo $HADOOP_CLASSPATH
+   92  source .bashrc 
+
+  131  ./build_jar.sh WordCount
+  113  hadoop com.sun.tools.javac.Main WordCount.java
+  114  jar cf wc.jar WordCount*.class
+  115  hadoop jar wc.jar WordCount /user/hadoop /user/hadoop/res
+  116  hadoop fs -cat /user/hadoop/res/part-r-00000
+
+  124  hdfs dfs -mkdir crimes
+  125  hdfs dfs -put Chicago_Crimes* crimes
+
+
+  141  ./build_jar.sh DistrictCount
+  123  hadoop com.sun.tools.javac.Main DistrictCount.java 
+  126  jar cf DistrictCount.jar DistrictCount*.class 
+  127  hadoop jar DistrictCount.jar DistrictCount /user/hadoop/crimes /user/hadoop/district
+  134  hdfs dfs -rmr /user/hadoop/district
+
+  149  hadoop fs -cat /user/hadoop/district/part-r-00000 | sort -k 2 -nr 
+  152  hadoop fs -cat /user/hadoop/district/part-r-00000 | sort -k 2 -nr | sed -e "s/\t/,/g" > crime_count_per_district.csv
+
+https://www.linode.com/docs/guides/how-to-install-and-set-up-hadoop-cluster/?%20_cf_chl_captcha_tk_%20=b826b52b06e5639b458d2e5491da02a080f617f5-1623311833-0-AfPUJt27Xf6thDaghtfClgvbamQflLRsWSO3L4E6EI2rvbVGhBPEcX7u1mz8wtywzzQLZbRkapSlYE99LLw9NfLuR17iuFCoib06BhcAmc7gi0W3uf1w6ii58q2C5G0STFAJf16kd85UwKLBqumgc5lVNldaU9APrT-ZMgPgZTPg_cCcZU44PQu0wumZ8Y2CLMZQXHF6JREJunnNpLHTWt8SdJMjBfs7dhJqhkZoWhsD2aQtQTHQaRirF4v3r_ImKpGwn9URdyuJs3M1bYVM27QA3bl6nWj4KvvMMiKrG4eauGve9J--PyTzbrnkq5Zni7dqgK1pX2mqKq2vLTagYIXT7BTxfJZxE7te6HZ_HNsjVZT-GP_HmLfGm4mmBspc1Lr-DraBJ-U9Jj-ddSUCCVd8wrXD6fqyHXOp6YR-36E-AuMBaVD5tov6xQ55l62LMDJZ2H-46B3bVHLG938KLgPSfRGTTj3xJC6QdItwuBVvPpEvjLzhdZYrxAVs2InY-9k2FJBaoYsYfBckFsVgvY8GNWvkyMrv5ykAOsY_NB27GHip_RSxOr7IWLha9FZUFMj0CLbi_2gqPt2VBxNWcegbDXeDrCo2-TE3SDkj5GrwgONhjSe5ZwDiTz_zdnPJcNan5f3E8lGHXP0HdZarEzGWkQd1lJeUX2ykC6ly_Qa1bTTbStbWqXVvplWondpAASKRhgMLfJ-ySJXvFYz1VTjKEl-4aRlWa_V_opRQgZX9
+https://pnunofrancog.medium.com/how-to-set-up-hadoop-3-2-1-multi-node-cluster-on-ubuntu-20-04-inclusive-terminology-2dc17b1bff19
